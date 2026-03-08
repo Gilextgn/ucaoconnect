@@ -1,14 +1,18 @@
-# Utilisation de l'image officielle PHP Apache
 FROM php:8.2-apache
 
-# Installation des extensions PHP nécessaires (ajoute les tiennes ici)
+# 1. Désactiver tous les modules MPM par défaut
+RUN a2dismod mpm_event mpm_worker mpm_prefork
+
+# 2. Activer uniquement le MPM 'prefork' (nécessaire pour PHP avec Apache)
+RUN a2enmod mpm_prefork
+
+# 3. Installer les extensions nécessaires
 RUN docker-php-ext-install mysqli pdo pdo_mysql
 
-# Copie de ton code source dans le dossier d'Apache
+# 4. Copier ton code
 COPY . /var/www/html/
 
-# Donner les droits nécessaires à l'utilisateur www-data (Apache)
+# 5. Corriger les permissions
 RUN chown -R www-data:www-data /var/www/html/
 
-# Exposition du port 80 pour Railway
 EXPOSE 80
