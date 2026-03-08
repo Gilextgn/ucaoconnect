@@ -7,7 +7,7 @@ RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
 # Copie de ton projet
 COPY . /var/www/html/
 
-# Suppression de la page d'accueil par défaut de Debian
-RUN rm /var/www/html/index.html
+# Supprimer la page par défaut sans erreur si elle n'existe pas
+RUN rm -f /var/www/html/index.html /var/www/html/index.php.default
 
 EXPOSE 80
