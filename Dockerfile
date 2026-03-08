@@ -1,14 +1,11 @@
-# Désactiver les modules MPM en conflit et activer celui par défaut (prefork)
-RUN a2dismod mpm_event mpm_worker && a2enmod mpm_prefork
-
-COPY . /var/www/html/
-EXPOSE 80
-
-# Utilise une image PHP officielle avec Apache
 FROM php:8.2-apache
 
-# Copie tout le contenu de ton dossier actuel dans le dossier du serveur
+# 1. Désactiver les modules MPM en conflit
+# 2. Activer le module 'prefork' (le plus stable pour PHP)
+RUN a2dismod mpm_event mpm_worker && a2enmod mpm_prefork
+
+# Copier le code source
 COPY . /var/www/html/
 
-# Expose le port 80 pour le web
+# Exposer le port 80
 EXPOSE 80
