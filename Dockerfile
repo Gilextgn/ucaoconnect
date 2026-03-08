@@ -1,13 +1,13 @@
 FROM php:8.2-apache
 
-# Configuration Apache
-RUN a2dismod mpm_event mpm_worker && a2enmod mpm_prefork
+# Configuration standard pour supprimer l'avertissement ServerName
 RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
-# Copie de ton projet
+# Nettoyage des modules MPM (préparation pour Prefork)
+RUN a2dismod mpm_event mpm_worker && a2enmod mpm_prefork
+
+# Copie de tout le contenu actuel vers le dossier web d'Apache
 COPY . /var/www/html/
 
-# Supprimer la page par défaut sans erreur si elle n'existe pas
-RUN rm -f /var/www/html/index.html /var/www/html/index.php.default
-
+# Exposer le port 80
 EXPOSE 80
